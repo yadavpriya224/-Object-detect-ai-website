@@ -1,0 +1,5 @@
+{
+  "name": "Remix: Object Detection",
+  "description": "An interactive educational platform for Transfer Learning in Object Detection, featuring a live AI simulation using Gemini to demonstrate detection concepts.",
+  "requestFramePermissions": []
+}
