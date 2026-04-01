@@ -30,8 +30,12 @@ export const ObjectDetector: React.FC = () => {
 
   const detectObjects = async () => {
     if (!image) return;
-    if (!process.env.API_KEY) {
-        setError("API Key is missing. Detection requires a valid Google GenAI API Key.");
+    // WARNING: Client-side API key usage is for demo purposes only.
+    // In a production app, you should move this logic to a backend server or Netlify Function.
+    const apiKey = import.meta.env.VITE_GEMINI_API_KEY || process.env.API_KEY || process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+        setError("API Key is missing. Please set VITE_GEMINI_API_KEY in your Netlify environment variables.");
         return;
     }
 
@@ -39,7 +43,7 @@ export const ObjectDetector: React.FC = () => {
     setError(null);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       const base64Data = image.split(',')[1];
 
       // We ask Gemini to simulate a YOLO output format
