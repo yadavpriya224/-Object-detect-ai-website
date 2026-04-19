@@ -98,7 +98,7 @@ print(f"Precision: {metrics.box.p.mean():.3f}")
             <button onClick={() => scrollToSection('demo')} className="hover:text-white transition-colors">Demo</button>
             <button onClick={() => scrollToSection('code')} className="hover:text-white transition-colors">Implementation</button>
           </div>
-          <a href="https://github.com/yadavpriya224/-Object-detect-ai-website/" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
+          <a href="https://github.com/ultralytics/yolov5" target="_blank" rel="noreferrer" className="flex items-center gap-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors">
             <Github className="w-4 h-4" />
             <span>Repo</span>
           </a>
