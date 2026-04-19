@@ -11,7 +11,7 @@ export const ObjectDetector: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [liveDetection, setLiveDetection] = useState(false);
   const [voiceEnabled, setVoiceEnabled] = useState(true); // Default to true for this mode
-  const [blindMode, setBlindMode] = useState(true);
+  const [lowVisionMode, setLowVisionMode] = useState(true);
   const [latestAlert, setLatestAlert] = useState<string | null>(null);
   const [detections, setDetections] = useState<DetectionObject[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -60,19 +60,19 @@ export const ObjectDetector: React.FC = () => {
         const current = event.resultIndex;
         const transcript = event.results[current][0].transcript.toLowerCase();
         
-        if (transcript.includes('blind mode on') || transcript.includes('start blind mode') || transcript.includes('enable blind mode')) {
-          setBlindMode(true);
+        if (transcript.includes('low vision mode on') || transcript.includes('start low vision mode') || transcript.includes('enable low vision mode')) {
+          setLowVisionMode(true);
           setLatestAlert(null);
           if (voiceEnabledRef.current && "speechSynthesis" in window) {
               window.speechSynthesis.cancel();
-              window.speechSynthesis.speak(new SpeechSynthesisUtterance("Blind mode activated"));
+              window.speechSynthesis.speak(new SpeechSynthesisUtterance("Low vision mode activated"));
           }
-        } else if (transcript.includes('blind mode off') || transcript.includes('stop blind mode') || transcript.includes('disable blind mode')) {
-          setBlindMode(false);
+        } else if (transcript.includes('low vision mode off') || transcript.includes('stop low vision mode') || transcript.includes('disable low vision mode')) {
+          setLowVisionMode(false);
           setLatestAlert(null);
           if (voiceEnabledRef.current && "speechSynthesis" in window) {
               window.speechSynthesis.cancel();
-              window.speechSynthesis.speak(new SpeechSynthesisUtterance("Blind mode deactivated"));
+              window.speechSynthesis.speak(new SpeechSynthesisUtterance("Low vision mode deactivated"));
           }
         }
       };
@@ -249,7 +249,7 @@ export const ObjectDetector: React.FC = () => {
                     }
                 },
                 {
-                    text: blindMode ? `Act as an AI system designed to assist visually impaired users in real time. 
+                    text: lowVisionMode ? `Act as an AI system designed to assist visually impaired users in real time. 
                     Analyze the image to detect objects (people, vehicles, doors, stairs, obstacles, signs, etc.) and read relevant text.
                     Return a JSON object with two keys:
                     1. "voice_alert": A clear, short (max 10 words), actionable voice guidance sentence prioritizing safety and navigation. Estimate distance (e.g., 'very close', '2 steps ahead') and position (e.g., 'left', 'ahead'). Example: 'Obstacle on left. Move slightly right.'
@@ -294,10 +294,10 @@ export const ObjectDetector: React.FC = () => {
         const result = JSON.parse(text);
         if (result.detections) {
             setDetections(result.detections);
-            if (blindMode && result.voice_alert) {
+            if (lowVisionMode && result.voice_alert) {
                 setLatestAlert(result.voice_alert);
                 speakAlert(result.voice_alert);
-            } else if (!blindMode) {
+            } else if (!lowVisionMode) {
                 setLatestAlert(null);
                 speakDetections(result.detections);
             }
@@ -344,16 +344,16 @@ export const ObjectDetector: React.FC = () => {
         </div>
         <div className="flex flex-wrap gap-3">
              <button
-                 onClick={() => setBlindMode(!blindMode)}
+                 onClick={() => setLowVisionMode(!lowVisionMode)}
                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all text-sm font-medium border ${
-                     blindMode 
+                     lowVisionMode 
                      ? 'bg-emerald-600/20 text-emerald-400 border-emerald-500/30' 
                      : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-400 border-zinc-700'
                  }`}
-                 title={blindMode ? "Blind Mode On" : "Blind Mode Off"}
+                 title={lowVisionMode ? "Low Vision Mode On" : "Low Vision Mode Off"}
              >
-                 {blindMode ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                 Blind Mode
+                 {lowVisionMode ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                 Low Vision Mode
              </button>
              <button
                  onClick={() => setVoiceEnabled(!voiceEnabled)}
@@ -437,7 +437,7 @@ export const ObjectDetector: React.FC = () => {
         </div>
       </div>
 
-      {blindMode && latestAlert && (
+      {lowVisionMode && latestAlert && (
           <div className="bg-blue-900/40 border-b border-blue-900/60 p-4 flex items-center justify-center gap-3 text-center">
               <Volume2 className="w-6 h-6 text-blue-400 animate-pulse" />
               <p className="text-xl font-bold text-blue-100 tracking-wide">{latestAlert}</p>
